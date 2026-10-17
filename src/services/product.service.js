@@ -27,7 +27,7 @@ const create = async ({ data, image, userId }) => {
 
   return productModel.create({
     ...data,
-    image: imageService.toPublicUrl(image.filename),
+    image: await imageService.saveImage(image),
     userId,
   });
 };
@@ -46,7 +46,7 @@ const updateImage = async (productId, image) => {
 
   const product = await getById(productId);
   const updated = await productModel.update(productId, {
-    image: imageService.toPublicUrl(image.filename),
+    image: await imageService.saveImage(image),
   });
   await imageService.deleteImage(product.image);
   return updated;

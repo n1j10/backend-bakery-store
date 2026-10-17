@@ -1,4 +1,3 @@
-const fs = require("node:fs");
 const multer = require("multer");
 const config = require("../config");
 const ApiError = require("../utils/ApiError");
@@ -11,9 +10,6 @@ const notFound = (req, res, next) => {
 const errorHandler = (error, req, res, next) => {
   let statusCode = error.statusCode || 500;
   let message = error.message || "Internal server error";
-
-  // The request failed, so an image uploaded with it is not needed anymore.
-  if (req.file) fs.unlink(req.file.path, () => {});
 
   if (error instanceof multer.MulterError) {
     statusCode = 400;

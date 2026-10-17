@@ -32,7 +32,7 @@ const create = async ({ data, image, userId }) => {
   return categoryModel.create({
     title: data.title,
     description: data.description || null,
-    image: imageService.toPublicUrl(image.filename),
+    image: await imageService.saveImage(image),
     userId,
   });
 };
@@ -51,7 +51,7 @@ const updateImage = async (categoryId, image) => {
 
   const category = await getById(categoryId);
   const updated = await categoryModel.update(categoryId, {
-    image: imageService.toPublicUrl(image.filename),
+    image: await imageService.saveImage(image),
   });
   await imageService.deleteImage(category.image);
   return updated;
