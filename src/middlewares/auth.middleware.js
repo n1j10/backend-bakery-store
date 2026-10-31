@@ -14,7 +14,7 @@ const authenticate = async (req, res, next) => {
     const token = readToken(req);
     if (!token) throw ApiError.unauthorized("Login required");
 
-    const payload = jwt.verify(token, config.jwt.secret);
+    const payload = jwt.verify(token, config.jwt.secret, { algorithms: ["HS256"] });
     const user = await userModel.findById(payload.sub);
     if (!user) throw ApiError.unauthorized("Login required");
 
@@ -42,7 +42,7 @@ const optionalAuth = async (req, res, next) => {
   if (!token) return next();
 
   try {
-    const payload = jwt.verify(token, config.jwt.secret);
+    const payload = jwt.verify(token, config.jwt.secret, { algorithms: ["HS256"] });
     req.user = await userModel.findById(payload.sub);
   } catch {
     req.user = undefined;
