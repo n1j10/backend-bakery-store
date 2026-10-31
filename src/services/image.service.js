@@ -3,6 +3,7 @@ const path = require("node:path");
 const crypto = require("node:crypto");
 const { S3Client, PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const config = require("../config");
+const { extensionFor } = require("../middlewares/upload.middleware");
 
 // With S3_BUCKET set, images go to S3-compatible storage (AWS S3, Cloudflare R2,
 // Supabase Storage...), which is required on Vercel because its filesystem is
@@ -17,7 +18,7 @@ const client = s3.bucket
     })
   : null;
 
-const newFilename = (file) => `${crypto.randomUUID()}${path.extname(file.originalname)}`;
+const newFilename = (file) => `${crypto.randomUUID()}${extensionFor(file.mimetype)}`;
 
 // Stores an uploaded file (multer memory storage) and returns its public URL.
 const saveImage = async (file) => {
